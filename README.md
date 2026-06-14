@@ -32,7 +32,7 @@ claude-skills/
 | `pensive:unified-review`、`pensive:blast-radius`、`pensive:harden`、`pensive:performance-review`、`pensive:code-refinement`、`pensive:architecture-reviewer` | [pensive](https://github.com/athola/claude-night-market) | `/plugin install pensive@claude-night-market` |
 | `conserve:unbloat` | [conserve](https://github.com/athola/claude-night-market) | `/plugin install conserve@claude-night-market` |
 | `commit-commands:commit`、`commit-commands:commit-push-pr`、`commit-commands:clean_gone` | [commit-commands](https://github.com/anthropics/claude-plugins-official) | `/plugin install commit-commands@claude-plugins-official` |
-| `grill-me`、`diagnose`、`prototype`、`to-issues` | Claude Code 内置 / agent skills | 无需安装（如缺失请装 [agent-sdk](https://github.com/anthropics/claude-agent-sdk)） |
+| `grill-me`、`diagnose`、`prototype`、`to-issues`、`triage`、`handoff`、`tdd`、`zoom-out`、`write-a-skill`、`caveman` | [mattpocock/skills](https://github.com/mattpocock/skills) | `git clone https://github.com/mattpocock/skills ~/.agents/skills` |
 | `simplify` | Claude Code 内置 | 无需安装 |
 
 ```bash
