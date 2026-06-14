@@ -1,0 +1,8 @@
+[project]
+name = "claude-mcp"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = ["mcp[cli]>=1.0.0"]
+
+[project.scripts]
+claude-mcp = "server:main"
