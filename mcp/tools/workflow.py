@@ -1,6 +1,29 @@
 """Workflow orchestration engine."""
 import os
 
+# Shared init steps (start and continue both use these)
+INIT = [
+    {"action":"locate_project"},
+    {"action":"detect_tech"},
+    {"action":"check_claude_mem","health":"curl localhost:37777"},
+    {"action":"mcp","tool":"session_read","reason":"check pending workflows"},
+    {"action":"check_graphify","exists":"read GRAPH_REPORT.md","missing":"suggest /graphify ."},
+    {"action":"read_claude_md"},
+    {"action":"git_status","what":"log -5 + status"},
+]
+
+# start = INIT + ask user
+START = INIT + [
+    {"action":"route","ask_user":True,"to":["dev","fix","refactor","code-audit"]},
+]
+
+# continue = INIT + stash + rebuild context + auto-route
+CONTINUE = INIT + [
+    {"action":"git_status","what":"stash list"},
+    {"action":"rebuild_context","sources":["session.json","git","claude-mem"]},
+    {"action":"route","auto_if":"session found","fallback":"ask user","to":["dev","fix","refactor","code-audit"]},
+]
+
 PHASE_MAP = {}
 
 def step(slug, workflow, phase, scale=None, context=None):
@@ -223,15 +246,7 @@ START = [
     {"action":"git_status"},
     {"action":"route","to":["dev","fix","refactor","code-audit"]},
 ]
-CONTINUE_STEPS = [
-    {"action":"locate_project"},
-    {"action":"mcp","tool":"session_read"},
-    {"action":"check_claude_mem","offline":"skip"},
-    {"action":"read_claude_md"},
-    {"action":"git_status","what":"log+status+stash"},
-    {"action":"rebuild_context"},
-    {"action":"route"},
-]
+
 WRAP = [
     {"action":"git_summary"},
     {"action":"skill","skill":"ponytail-gain"},
@@ -342,15 +357,7 @@ START = [
     {"action":"git_status"},
     {"action":"route","to":["dev","fix","refactor","code-audit"]},
 ]
-CONTINUE_STEPS = [
-    {"action":"locate_project"},
-    {"action":"mcp","tool":"session_read"},
-    {"action":"check_claude_mem","offline":"skip"},
-    {"action":"read_claude_md"},
-    {"action":"git_status","what":"log+status+stash"},
-    {"action":"rebuild_context"},
-    {"action":"route"},
-]
+
 WRAP = [
     {"action":"git_summary"},
     {"action":"skill","skill":"ponytail-gain"},
@@ -370,6 +377,29 @@ AUDIT = [
     {"action":"scan","parallel":["patterns","ponytail","checklist"]},
     {"action":"report"},
     {"action":"fix_confirm"},
+]
+
+# Shared init steps (start and continue both use these)
+INIT = [
+    {"action":"locate_project"},
+    {"action":"detect_tech"},
+    {"action":"check_claude_mem","health":"curl localhost:37777"},
+    {"action":"mcp","tool":"session_read","reason":"check pending workflows"},
+    {"action":"check_graphify","exists":"read GRAPH_REPORT.md","missing":"suggest /graphify ."},
+    {"action":"read_claude_md"},
+    {"action":"git_status","what":"log -5 + status"},
+]
+
+# start = INIT + ask user
+START = INIT + [
+    {"action":"route","ask_user":True,"to":["dev","fix","refactor","code-audit"]},
+]
+
+# continue = INIT + stash + rebuild context + auto-route
+CONTINUE = INIT + [
+    {"action":"git_status","what":"stash list"},
+    {"action":"rebuild_context","sources":["session.json","git","claude-mem"]},
+    {"action":"route","auto_if":"session found","fallback":"ask user","to":["dev","fix","refactor","code-audit"]},
 ]
 
 PHASE_MAP = {
@@ -395,7 +425,7 @@ PHASE_MAP = {
     ("refactor","review",None): REFACTOR_REVIEW,
     ("refactor","ship",None): [{"action":"skill","skill":"commit-commands:commit"}],
     ("start","init",None): START,
-    ("continue","init",None): CONTINUE_STEPS,
+    ("continue","init",None): CONTINUE,
     ("wrap","init",None): WRAP,
     ("code-audit","init",None): AUDIT,
 }
