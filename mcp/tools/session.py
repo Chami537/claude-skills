@@ -5,6 +5,11 @@ import os
 import re
 from datetime import datetime, timezone, timedelta
 
+try:
+    from tools.workflow import validate_phase
+except ImportError:
+    validate_phase = None  # optional if workflow.py not present
+
 BASE_DIR = os.path.expanduser("~/.claude/projects")
 SESSION_TTL = timedelta(hours=24)
 
@@ -131,6 +136,15 @@ def write(slug: str, workflow: str | None = None, phase: str | None = None,
         for k in checks:
             if k not in VALID_CHECKS:
                 return {"error": f"Invalid check key '{k}'. Must be one of {VALID_CHECKS}"}
+
+    # Hard rules from workflow engine (build_passed required for review/ship)
+    if validate_phase and phase:
+        merged_checks = dict(current.get("checks", {}))
+        if checks:
+            merged_checks.update(checks)
+        ok, err = validate_phase(wf, current.get("phase", ""), phase, merged_checks)
+        if not ok:
+            return {"error": err}
 
     # Merge
     current.update(kwargs)
