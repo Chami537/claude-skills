@@ -63,7 +63,7 @@ git -C "<project_path>" stash list
 
 如果 claude-mem worker 可用（`http://localhost:37777`），读取该项目的历史会话记录——claude-mem 自动捕捉了上次会话中的代码阅读、编辑、命令执行等操作。作为 git log 的补充，帮你理解"上次到底在折腾什么"。
 
-**worker 不可用（端口连不上）？** 一句话告诉用户然后跳过：`claude-mem worker 不在线，本次没有跨会话历史。用 `npx claude-mem start` 可以拉起。` 不要因为这个阻塞恢复流程。
+**worker 不可用？先确认是否 sandbox 误判**：Claude Code 的 sandbox 会拦截 `curl localhost`，导致即使 worker 在跑也会报"不可用"。**浏览器打开 `http://localhost:37777` 确认**——如果面板显示有记录，说明 worker 活着，sandbox 误报可以忽略。如果面板连不上，才算真的不可用。不管哪种情况，都不要因为这个阻塞恢复流程。
 
 ## Step 5: Rebuild Context
 
