@@ -89,6 +89,7 @@ DEV_HARDEN = [
     {"action":"skill","skill":"conserve:unbloat","condition":"dead code"},
 ]
 DEV_SHIP = [
+    {"action":"auto_update_claude_md","reason":"update CLAUDE.md after ship"},
     {"action":"skill","skill":"commit-commands:commit-push-pr","condition":"M/L"},
     {"action":"skill","skill":"commit-commands:commit","condition":"S"},
 ]
@@ -137,6 +138,7 @@ DEV_HARDEN = [
     {"action":"skill","skill":"conserve:unbloat","condition":"dead code"},
 ]
 DEV_SHIP = [
+    {"action":"auto_update_claude_md","reason":"update CLAUDE.md after ship"},
     {"action":"skill","skill":"commit-commands:commit-push-pr","condition":"M/L"},
     {"action":"skill","skill":"commit-commands:commit","condition":"S"},
 ]
@@ -201,6 +203,7 @@ DEV_HARDEN = [
     {"action":"skill","skill":"conserve:unbloat","condition":"dead code"},
 ]
 DEV_SHIP = [
+    {"action":"auto_update_claude_md","reason":"update CLAUDE.md after ship"},
     {"action":"skill","skill":"commit-commands:commit-push-pr","condition":"M/L"},
     {"action":"skill","skill":"commit-commands:commit","condition":"S"},
 ]
@@ -302,6 +305,7 @@ DEV_HARDEN = [
     {"action":"skill","skill":"conserve:unbloat","condition":"dead code"},
 ]
 DEV_SHIP = [
+    {"action":"auto_update_claude_md","reason":"update CLAUDE.md after ship"},
     {"action":"skill","skill":"commit-commands:commit-push-pr","condition":"M/L"},
     {"action":"skill","skill":"commit-commands:commit","condition":"S"},
 ]
@@ -410,13 +414,13 @@ PHASE_MAP = {
     ("fix","baseline",None): [{"action":"build_check"}],
     ("fix","fixing",None): [{"action":"tdd_or_manual","rule":"minimal"}],
     ("fix","review",None): FIX_REVIEW,
-    ("fix","ship",None): [{"action":"skill","skill":"commit-commands:commit"}],
+    ("fix","ship",None): [{"action":"auto_update_claude_md"},{"action":"skill","skill":"commit-commands:commit"}],
     ("refactor","measure",None): REFACTOR_MEASURE,
     ("refactor","plan",None): [{"action":"plan_simple_or_complex"}],
     ("refactor","build",None): [{"action":"tdd_or_manual"}],
     ("refactor","verify",None): [{"action":"build_check"}],
     ("refactor","review",None): REFACTOR_REVIEW,
-    ("refactor","ship",None): [{"action":"skill","skill":"commit-commands:commit"}],
+    ("refactor","ship",None): [{"action":"auto_update_claude_md"},{"action":"skill","skill":"commit-commands:commit"}],
     ("start","init",None): START,
     ("continue","init",None): CONTINUE,
     ("wrap","init",None): WRAP,
