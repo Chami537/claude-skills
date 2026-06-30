@@ -1,9 +1,14 @@
-"""Claude MCP Server — session, patterns, checklist tools for dev workflows."""
+"""Claude MCP Server — session, patterns, checklist + workflow orchestration engine.
+
+All workflow logic lives in tools/workflow.py. SKILL.md files are thin wrappers
+that call MCP tools. The agent reads returned steps and executes them.
+"""
 
 from mcp.server.fastmcp import FastMCP
 import tools.session as session
 import tools.patterns as patterns
 import tools.checklist as checklist
+import tools.workflow as workflow
 
 mcp = FastMCP("claude-mcp")
 
@@ -12,26 +17,20 @@ mcp = FastMCP("claude-mcp")
 
 @mcp.tool()
 def session_read(slug: str) -> dict:
-    """读取 session.json。slug 如 hita、qqbot。
-    Returns session 或 {}。_expired=true 表示超过 24h。"""
+    """Read session.json for a project slug (e.g. hita, qqbot). Returns {} if not found, _expired=true if >24h."""
     return session.read(slug)
 
 
 @mcp.tool()
-def session_write(
-    slug: str,
-    workflow: str | None = None,
-    phase: str | None = None,
-    checks: dict | None = None,
-) -> dict:
-    """写入/更新 session.json。只传要更新的字段。
-    workflow: dev|fix|refactor。phase 自动校验。checks 部分更新。"""
-    return session.write(slug, workflow=workflow, phase=phase, checks=checks)
+def session_write(slug: str, workflow: str | None = None, phase: str | None = None,
+                  checks: dict | None = None, **kwargs) -> dict:
+    """Write/merge session.json. Only pass fields you want to update. Phase transitions validated server-side."""
+    return session.write(slug, workflow=workflow, phase=phase, checks=checks, **kwargs)
 
 
 @mcp.tool()
 def session_cleanup(slug: str) -> dict:
-    """删除 session.json（工作流完成时调用）。"""
+    """Delete session.json when a workflow is complete."""
     return session.cleanup(slug)
 
 
@@ -39,47 +38,74 @@ def session_cleanup(slug: str) -> dict:
 
 @mcp.tool()
 def patterns_match(slug: str, symptoms: list[str], files: list[str] | None = None) -> list[dict]:
-    """用症状关键词+文件路径匹配已知 bug pattern。
-    返回匹配列表，按置信度(high/low)+出现次数排序。"""
+    """Match known bug patterns by symptoms + file paths. Returns sorted by confidence (high/low) + occurrence count."""
     return patterns.match(slug, symptoms, files)
 
 
 @mcp.tool()
 def patterns_append(slug: str, id: str, pattern: str, symptoms: list[str],
                     files: list[str], root_cause: str, fix: str) -> dict:
-    """添加 bug pattern。同 id 已存在则 count+1 合并 symptoms。"""
-    return patterns.append(slug, {
-        "id": id,
-        "pattern": pattern,
-        "symptoms": symptoms,
-        "files": files,
-        "root_cause": root_cause,
-        "fix": fix,
-    })
+    """Add a bug pattern. Same id -> count+1 and merge symptoms."""
+    p = {"id": id, "pattern": pattern, "symptoms": symptoms,
+         "files": files, "root_cause": root_cause, "fix": fix}
+    return patterns.append(slug, p)
 
 
 @mcp.tool()
 def patterns_list(slug: str) -> list[dict]:
-    """列出项目所有 pattern，按出现次数降序。"""
+    """List all bug patterns for a project, sorted by count desc."""
     return patterns.list_all(slug)
 
 
 # ── Checklist tools ────────────────────────────────────────────
 
 @mcp.tool()
-def checklist_read(slug: str) -> str:
-    """读取项目的验证清单 markdown。"""
+def checklist_read(slug: str) -> dict:
+    """Read verification checklist for a project."""
     return checklist.read(slug)
 
 
 @mcp.tool()
-def checklist_append(slug: str, module: str, step: str, source: str) -> dict:
-    """追加手动验证步骤到 checklist。自动去重。
-    module: 页面名。step: 验证描述。source: commit hash 或功能名。"""
-    return checklist.append(slug, module, step, source)
+def checklist_append(slug: str, module: str = "", step: str = "",
+                     source: str = "") -> dict:
+    """Append a verification step. Auto-dedup and auto-sort by module."""
+    return checklist.append(slug, module=module, step=step, source=source)
 
 
-# ── Entry ──────────────────────────────────────────────────────
+# ── Workflow orchestration tools ───────────────────────────────
 
-if __name__ == "__main__":
-    mcp.run()
+@mcp.tool()
+def workflow_step(slug: str, workflow: str, phase: str, scale: str | None = None,
+                  context: dict | None = None) -> dict:
+    """THE core tool. Call at the start of ANY workflow phase.
+    
+    Returns the exact ordered steps the agent MUST execute for this phase.
+    All workflow logic (what to do, when, with fallbacks) lives here — not in SKILL.md.
+    
+    Args:
+        slug: project slug (hita, qqbot, etc.)
+        workflow: dev | fix | refactor | start | continue | wrap | code-audit
+        phase: current phase (plan, build, review, diagnose, measure, etc.)
+        scale: for dev — S | M | L
+        context: optional dict with task description, has_tests, etc.
+    
+    Returns: {workflow, phase, scale, steps: [{action, skill/tool, reason, condition, fallback}], total}
+    """
+    return workflow.step(slug, workflow, phase, scale=scale, context=context)
+
+
+@mcp.tool()
+def code_graph_resolve(slug: str, task: str, mode: str = "explore") -> dict:
+    """Unified code graph query with built-in fallback chain.
+    
+    Resolution order (the agent tries each in sequence, advancing on empty result):
+    1. graphify-out/GRAPH_REPORT.md (offline full-project graph, zero token)
+    2. tokensave_context (online NL code graph)
+    3. tokensave_search (symbol name search)
+    4. tokensave_dependencies (dependency chain trace)
+    5. tokensave_similar (similar code finder)
+    6. Agent(Explore) — last resort full scan
+    
+    Rule: NEVER fall back to manual Read + Grep. Follow the chain.
+    """
+    return workflow.code_graph_resolve(slug, task, mode=mode)
