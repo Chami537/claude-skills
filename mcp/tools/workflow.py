@@ -465,3 +465,47 @@ def validate_phase(wf, current, next_p, checks):
     if next_p == "ship" and not checks.get("build_passed"):
         return False, "HARD_RULE: build_passed required for ship"
     return True, None
+
+
+def health_report(slug):
+    import json, os, time
+    lf = os.path.expanduser(os.path.join('~', '.claude', 'projects', '.workflow_events.jsonl'))
+    if not os.path.exists(lf):
+        return {'status': 'no events', 'fallbacks': 0, 'blocks': 0}
+    events = []
+    with open(lf, 'r') as fh:
+        for line in fh:
+            try:
+                e = json.loads(line)
+                if e.get('slug') == slug or e.get('slug') == 'global':
+                    events.append(e)
+            except:
+                pass
+    fallbacks = [e for e in events if e.get('event') == 'fallback']
+    blocks = [e for e in events if e.get('event') == 'rule_blocked']
+    deps = [e for e in events if e.get('event') == 'dep_check']
+    return {'slug': slug, 'total_events': len(events), 'fallbacks': len(fallbacks), 'blocks': len(blocks), 'recent_fallbacks': [f['detail'] for f in fallbacks[-5:]], 'recent_blocks': [b['detail'] for b in blocks[-5:]], 'last_dep_check': deps[-1]['detail'] if deps else None}
+
+def log_fallback(slug, tool, reason, next_tool):
+    import json, os, time
+    lf = os.path.expanduser(os.path.join('~', '.claude', 'projects', '.workflow_events.jsonl'))
+    os.makedirs(os.path.dirname(lf), exist_ok=True)
+    with open(lf, 'a') as fh:
+        json.dump({'ts': time.time(), 'slug': slug, 'event': 'fallback', 'detail': {'tool': tool, 'reason': reason, 'next': next_tool}}, fh, ensure_ascii=False)
+        fh.write(chr(10))
+
+def log_rule_block(slug, rule, detail):
+    import json, os, time
+    lf = os.path.expanduser(os.path.join('~', '.claude', 'projects', '.workflow_events.jsonl'))
+    os.makedirs(os.path.dirname(lf), exist_ok=True)
+    with open(lf, 'a') as fh:
+        json.dump({'ts': time.time(), 'slug': slug, 'event': 'rule_blocked', 'detail': {'rule': rule, 'detail': detail}}, fh, ensure_ascii=False)
+        fh.write(chr(10))
+
+def log_dependency_status(slug, deps):
+    import json, os, time
+    lf = os.path.expanduser(os.path.join('~', '.claude', 'projects', '.workflow_events.jsonl'))
+    os.makedirs(os.path.dirname(lf), exist_ok=True)
+    with open(lf, 'a') as fh:
+        json.dump({'ts': time.time(), 'slug': slug, 'event': 'dep_check', 'detail': deps}, fh, ensure_ascii=False)
+        fh.write(chr(10))
