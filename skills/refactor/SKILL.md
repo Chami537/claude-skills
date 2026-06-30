@@ -41,9 +41,11 @@ model_hint: opus
 
 **先跑 ponytail 审计**：`/ponytail-audit` — 全仓库扫描过度工程，输出一份按优先级排序的"该删什么/该简化什么"清单。这份清单直接作为 refactor 目标的输入。
 
-**同时用代码图谱快速理解目标区域**：`tokensave_context(task="<要重构的是什么>", mode="plan")` — 在改之前先看清依赖关系和调用链，避免重构时改断东西。
+**同时用代码图谱快速理解目标区域**：
 
-   **⚠️ 图谱无结果时的回退链**（依次尝试，每步无结果才进下一步）：
+   **📊 先检查离线图谱**：`ls <project_path>/graphify-out/`，存在则优先读 `GRAPH_REPORT.md` + `/graphify query <问题>`。graphify 全项目覆盖，不入 token 预算。
+
+   **🔍 在线图谱回退链**（无 graphify-out 时，依次尝试）：
    ① `tokensave_context` → ② `tokensave_search` → ③ `tokensave_dependencies` → ④ `tokensave_similar` → ⑤ `Agent(Explore)` 兜底。**禁止跳回手动 Read + Grep。**
 
 **然后按需补量**，别全跑：
