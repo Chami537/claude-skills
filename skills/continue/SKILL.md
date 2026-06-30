@@ -24,14 +24,18 @@ model_hint: standard
 
 ## Step 2: Read Session State
 
-调用 MCP：
+调用 **claude-mcp** 的 session_read（不是 tokensave 的 session_recall）：
 
+```python
+mcp__claude-mcp__session_read("<slug>")
+# 不要调 mcp__tokensave__session_recall — tokensave 对新项目会卡死图谱查询
 ```
-session_read("<slug>")
-```
+
+**任何 MCP 调用超过 10 秒没返回 → 立即取消，退化到纯 git 恢复（跳到 Step 4）。** 不要等，不要重试。
 
 返回精确的工作流状态。用 `workflow` + `phase` + `checks` 定位中断点。
 **返回 `_expired: true` 或空 `{}`** → 退化为纯 git 恢复，跳到 Step 4。
+**MCP 调用失败也不要紧** — `/continue` 的核心能力来自 git 和 CLAUDE.md，MCP 只是加速器。
 
 ## Step 3: Read Project Config
 
