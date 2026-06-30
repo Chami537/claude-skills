@@ -12,7 +12,11 @@ model_hint: opus
 
 # Dev: New Feature Workflow
 
-先确定规模，再按对应深度走。
+第一步不是读文本，是调 MCP：`mcp__claude-mcp__workflow_step("<slug>", workflow="dev", phase="<phase>", scale="S|M|L", context={"task": "<描述>"})`。返回的步骤是权威指令。只有 MCP 失败才读下面文本。
+
+---
+
+*以下为 MCP 不可用时的文本退化路径：*
 
 **⚠️ 每个 phase 开头先调 MCP：**
 ```python

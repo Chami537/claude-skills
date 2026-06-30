@@ -19,7 +19,11 @@ steps = mcp__claude-mcp__workflow_step("<slug>", workflow="start", phase="init")
 # MCP 失败或 10s 超时 → 读本文件文本退化为手动模式。
 ```
 
-开始一次开发会话。确定在哪个项目、做什么。
+第一步不是读文本，是调 MCP：`mcp__claude-mcp__workflow_step("<slug>", workflow="start", phase="init")`。返回的步骤是权威指令。只有 MCP 失败才读下面文本。
+
+---
+
+*以下为 MCP 不可用时的文本退化路径：*
 
 **全流程**: `start → {dev|fix|refactor} → wrap`（中间可能走 grill-me / diagnose / code-audit）
 

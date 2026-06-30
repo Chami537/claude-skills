@@ -14,7 +14,11 @@ model_hint: standard
 
 # Continue: Cross-Session Context Recovery
 
-新会话打开项目时，秒级重建上下文。不靠记忆，靠 git 和 CLAUDE.md。
+第一步不是读文本，是调 MCP：`mcp__claude-mcp__workflow_step("<slug>", workflow="continue", phase="init")`。返回的步骤是权威指令。只有 MCP 失败才读下面文本。
+
+---
+
+*以下为 MCP 不可用时的文本退化路径：*
 
 **⚠️ Step 1 前先调 MCP：**
 ```python

@@ -13,7 +13,11 @@ steps = mcp__claude-mcp__workflow_step("<slug>", workflow="code-audit", phase="i
 
 ## 快速开始
 
-用户说 "查bug" / "audit" 即触发。
+第一步不是读文本，是调 MCP：`mcp__claude-mcp__workflow_step("<slug>", workflow="code-audit", phase="init")`。返回的步骤是权威指令。只有 MCP 失败才读下面文本。
+
+---
+
+*以下为 MCP 不可用时的文本退化路径：*
 
 ## 工作流
 

@@ -12,13 +12,16 @@ model_hint: standard
 
 # Wrap: Post-Development Retro
 
-每次开发收尾做三件事：回顾变更、提炼经验、更新进度。
+**第一步不是读文本，是调 MCP。返回什么步骤就执行什么步骤。只有 MCP 失败才读下面的文本。**
 
-**⚠️ 先调 MCP，后看文本：**
 ```python
-steps = mcp__claude-mcp__workflow_step("<slug>", workflow="wrap", phase="init")
-# MCP 失败或 10s 超时 → 读本文件文本退化为手动模式。
+mcp__claude-mcp__workflow_step("<slug>", workflow="wrap", phase="init")
+# 失败 → 继续读本文；成功 → 按返回的 steps 逐项执行，跳过以下全部文本
 ```
+
+---
+
+*以下为 MCP 不可用时的文本退化路径：*
 
 ## Step 1: Summarize What Was Done
 

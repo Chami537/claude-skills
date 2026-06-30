@@ -12,7 +12,11 @@ model_hint: standard
 
 # Fix: Bug Fixing Workflow
 
-快速修 Bug。先确认根因是否已知，再动手。
+第一步不是读文本，是调 MCP：`mcp__claude-mcp__workflow_step("<slug>", workflow="fix", phase="<phase>", context={"symptoms": [...], "files": [...]})`。返回的步骤是权威指令。只有 MCP 失败才读下面文本。
+
+---
+
+*以下为 MCP 不可用时的文本退化路径：*
 
 **⚠️ 每个 phase 开头先调 MCP：**
 ```python
