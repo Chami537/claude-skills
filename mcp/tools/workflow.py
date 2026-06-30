@@ -247,16 +247,6 @@ START = [
     {"action":"route","to":["dev","fix","refactor","code-audit"]},
 ]
 
-WRAP = [
-    {"action":"git_summary"},
-    {"action":"skill","skill":"ponytail-gain"},
-    {"action":"mcp","tool":"headroom_compress"},
-    {"action":"extract_lessons","skip_if":"trivial"},
-    {"action":"mcp","tool":"checklist_append"},
-    {"action":"mcp","tool":"patterns_append","condition":"novel bug"},
-    {"action":"mcp","tool":"session_cleanup"},
-    {"action":"suggest","done":"clean_gone","partial":"to-issues"},
-]
 AUDIT = [
     {"action":"read_claude_md"},
     {"action":"mcp","tool":"patterns_list"},
@@ -361,6 +351,7 @@ START = [
 WRAP = [
     {"action":"git_summary"},
     {"action":"skill","skill":"ponytail-gain"},
+    {"action":"mcp","tool":"workflow_health","reason":"check fallbacks and dep status"},
     {"action":"mcp","tool":"headroom_compress"},
     {"action":"extract_lessons","skip_if":"trivial"},
     {"action":"mcp","tool":"checklist_append"},
