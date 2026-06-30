@@ -57,8 +57,18 @@
 
 ---
 
+## 个人网站 (Python/Flask + HTML/CSS/JS)
+
+| 陷阱 | 检查方法 | 级别 |
+|------|---------|------|
+| data/*.json 写入不完整 | 进程终止时 `atomic_write` 未 flush | HIGH |
+| SSG 构建路径错 | `BASE_DIR` 相对路径在 `python manage.py build` vs 直接 `python backend/ssg.py` 不一致 | HIGH |
+| admin.html JS 函数膨胀 | 124 函数/2263 行，新增功能在范 JS 里改错 | MEDIUM |
+| EXIF/GPS 解析异常 | PIL `_getexif()` 返回 None，未保护 | MEDIUM |
+| CRUD 路由复制粘贴 | contact/friend/music/work 修改时忘改另一个 | MEDIUM |
+
 ## 维护规则
 
-1. `/wrap` 存经验 → 问用户要不要同步到这里 → 要就追加对应项目段落
-2. 发现新项目陷阱 → 手动追加到对应项目表格
-3. 每个陷阱必须可 grep（有具体字符串或文件后缀）
+1. `/wrap` 自动存经验到 memory + 更新 CLAUDE.md。不再需要手动问。
+2. 发现新项目陷阱 → 手动追加到对应项目段落。
+3. 每个陷阱必须可 grep（有具体字符串或文件后缀）。
