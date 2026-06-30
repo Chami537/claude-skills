@@ -16,13 +16,13 @@ model_hint: opus
 
 **⚠️ 每个 phase 开头先调 MCP：**
 ```python
-steps = mcp__claude-mcp__workflow_step("<slug>", workflow="dev", "<phase>", scale="S|M|L", context={"task": "<描述>"})
+steps = mcp__claude-mcp__workflow_step("<slug>", workflow="dev", phase="<phase>", scale="S|M|L", context={"task": "<描述>"})
 # MCP 失败或 10s 超时 → 读本文件文本退化为手动模式。
 ```
 
 ## Phase -1: Resume Check
 
-调用 `session_read("<slug>")`。
+调用 `mcp__claude-mcp__session_read("<slug>")`。
 
 **session 存在且 `phase` 不是 `init`**：
 展示当前进度（phase + checks），问用户"继续从 Phase X 开始？还是重头走？"
@@ -85,7 +85,7 @@ steps = mcp__claude-mcp__workflow_step("<slug>", workflow="dev", "<phase>", scal
 
 **L 规模**：`EnterPlanMode` 方案审批通过后，**必须**调用 `Skill("grill-me")` 拷问设计，确认无遗漏再进 Build。
 
-**检查 patterns.json**：调用 `patterns_list("<slug>")`，找出 `files` glob 匹配本次改动文件的 pattern。展示给用户：
+**检查 patterns.json**：调用 `mcp__claude-mcp__patterns_list("<slug>")`，找出 `files` glob 匹配本次改动文件的 pattern。展示给用户：
 
 ```
 ⚠️ 这些文件有已知坑点：
@@ -122,7 +122,7 @@ python -m pytest           # Python
 
 **无测试的项目**：
 1. 编译确认
-2. 调用 `checklist_read("<slug>")`，跑相关模块的已有验证步骤
+2. 调用 `mcp__claude-mcp__checklist_read("<slug>")`，跑相关模块的已有验证步骤
 3. 跑 Phase 2 记下的新验证步骤
 
 编译不过不进 Review。
@@ -135,7 +135,7 @@ python -m pytest           # Python
 - 影响面评估 → 先 `tokensave_impact` 做图谱感知的变化影响分析（自动找出受影响节点），再 `Skill("pensive:blast-radius")` 交叉验证
 - Bug 自查（M/L 建议跑）→ `Skill("code-audit")` — 扫出新问题可选跳 `Skill("fix")`
 
-**Review 结束后**：log所有降级事件：`workflow_log_event(slug, "dep_check", {...})` — tokensave空了？graphify没生成？claude-mem不在线？记录清楚，/wrap 时汇总展示。
+**Review 结束后**：log所有降级事件：`mcp__claude-mcp__workflow_log_event(slug, "dep_check", {...})` — tokensave空了？graphify没生成？claude-mem不在线？记录清楚，/wrap 时汇总展示。
 
 ## Phase 5: Harden `[L 规模，或涉及认证/支付/权限/敏感数据]`
 
@@ -157,15 +157,15 @@ Ship 完成后提示用户 `Skill("wrap")` 收尾沉淀经验。
 每个 phase 结束时调用 MCP：
 
 ```python
-session_write("<slug>", workflow="dev", phase="<current>", checks={...})
+mcp__claude-mcp__session_write("<slug>", workflow="dev", phase="<current>", checks={...})
 ```
 
-- Phase 0 确定规模后：`session_write("<slug>", workflow="dev", phase="plan", scale="M")`
-- Phase 1 方案审批通过：`session_write("<slug>", phase="build", checks={"grill_me_done": True}  # L 规模)`
-- Phase 3 编译通过：`session_write("<slug>", phase="verify", checks={"build_passed": True})`
-- Phase 4 Review 完成：`session_write("<slug>", phase="review", checks={"simplify_done": True, "ponytail_review_done": True, ...})`
-- Phase 5 Harden 完成：`session_write("<slug>", phase="harden")`
-- Phase 6 Ship 后 → `session_cleanup("<slug>")`
+- Phase 0 确定规模后：`mcp__claude-mcp__session_write("<slug>", workflow="dev", phase="plan", scale="M")`
+- Phase 1 方案审批通过：`mcp__claude-mcp__session_write("<slug>", phase="build", checks={"grill_me_done": True}  # L 规模)`
+- Phase 3 编译通过：`mcp__claude-mcp__session_write("<slug>", phase="verify", checks={"build_passed": True})`
+- Phase 4 Review 完成：`mcp__claude-mcp__session_write("<slug>", phase="review", checks={"simplify_done": True, "ponytail_review_done": True, ...})`
+- Phase 5 Harden 完成：`mcp__claude-mcp__session_write("<slug>", phase="harden")`
+- Phase 6 Ship 后 → `mcp__claude-mcp__session_cleanup("<slug>")`
 
 ## 失败回环
 

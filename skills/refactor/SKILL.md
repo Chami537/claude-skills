@@ -17,14 +17,14 @@ model_hint: opus
 
 **⚠️ 每个 phase 开头先调 MCP，返回的步骤列表是权威指令：**
 ```python
-steps = mcp__claude-mcp__workflow_step("<slug>", workflow="refactor", "<phase>", context={"task": "<描述>"})
+steps = mcp__claude-mcp__workflow_step("<slug>", workflow="refactor", phase="<phase>", context={"task": "<描述>"})
 # 返回 {"steps": [...], "total": N}。逐项执行。
 # MCP 失败或 10 秒超时 → 读本文件文本描述退化为手动模式。
 ```
 
 ## Phase 0: Resume Check
 
-调用 `session_read("<slug>")`。
+调用 `mcp__claude-mcp__session_read("<slug>")`。
 
 **session 存在且 `phase` 不是 `init`**：
 展示当前进度（含 baseline 指标），问用户"继续还是重头来？"
@@ -39,7 +39,7 @@ steps = mcp__claude-mcp__workflow_step("<slug>", workflow="refactor", "<phase>",
 | ship | Phase 6 |
 
 用户选重头走 → 正常进 Phase 1。
-**session 不存在** → 先初始化：`session_write("<slug>", workflow="refactor", phase="init")`，再进 Phase 1。
+**session 不存在** → 先初始化：`mcp__claude-mcp__session_write("<slug>", workflow="refactor", phase="init")`，再进 Phase 1。
 **phase=init** → 正常进 Phase 1。
 
 ---
@@ -95,7 +95,7 @@ python -m pytest                              # Python
 
 **无测试的项目**：
 1. 编译确认
-2. 调用 `checklist_read("<slug>")`，跑相关模块的已有验证步骤
+2. 调用 `mcp__claude-mcp__checklist_read("<slug>")`，跑相关模块的已有验证步骤
 3. 按 Phase 3 记下的验证方法手动测试
 4. 确认改后行为正确、无副作用
 
@@ -131,15 +131,15 @@ Ship 完成后提示用户 `Skill("wrap")` 收尾沉淀经验。
 每个 phase 结束时调用 MCP：
 
 ```python
-session_write("<slug>", workflow="refactor", phase="<current>", checks={...})
+mcp__claude-mcp__session_write("<slug>", workflow="refactor", phase="<current>", checks={...})
 ```
 
-- Phase 1 测量完成：`session_write("<slug>", workflow="refactor", phase="measure", baseline={...})`
-- Phase 2 方案确定：`session_write("<slug>", phase="plan", checks={"grill_me_done": True}  # 范围大时)`
-- Phase 3 进入构建：`session_write("<slug>", phase="build")`
-- Phase 4 编译通过：`session_write("<slug>", phase="verify", checks={"build_passed": True})`
-- Phase 5 Review 完成：`session_write("<slug>", phase="review", checks={...})`
-- Phase 6 Ship 后 → `session_cleanup("<slug>")`
+- Phase 1 测量完成：`mcp__claude-mcp__session_write("<slug>", workflow="refactor", phase="measure", baseline={...})`
+- Phase 2 方案确定：`mcp__claude-mcp__session_write("<slug>", phase="plan", checks={"grill_me_done": True}  # 范围大时)`
+- Phase 3 进入构建：`mcp__claude-mcp__session_write("<slug>", phase="build")`
+- Phase 4 编译通过：`mcp__claude-mcp__session_write("<slug>", phase="verify", checks={"build_passed": True})`
+- Phase 5 Review 完成：`mcp__claude-mcp__session_write("<slug>", phase="review", checks={...})`
+- Phase 6 Ship 后 → `mcp__claude-mcp__session_cleanup("<slug>")`
 
 ## 失败回环
 

@@ -15,7 +15,7 @@ model_hint: standard
 
 **⚠️ 先调 MCP 再读文本：**
 ```python
-steps = mcp__claude-mcp__workflow_step("<slug>", workflow="start", "init")
+steps = mcp__claude-mcp__workflow_step("<slug>", workflow="start", phase="init")
 # MCP 失败或 10s 超时 → 读本文件文本退化为手动模式。
 ```
 
@@ -72,7 +72,7 @@ steps = mcp__claude-mcp__workflow_step("<slug>", workflow="start", "init")
 调用 MCP 工具：
 
 ```
-session_read("<slug>")
+mcp__claude-mcp__session_read("<slug>")
 ```
 
 **返回数据存在且 `updated` 在 24h 内**：
@@ -153,7 +153,7 @@ git -C "<project_path>" status
 路由前，初始化 session：
 
 ```
-session_write("<slug>",
+mcp__claude-mcp__session_write("<slug>",
   workflow="fix",       # 先设一个，后续 workflow skill 会覆盖
   phase="init",
   project_path="<path>",

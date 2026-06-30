@@ -16,7 +16,7 @@ model_hint: standard
 
 **⚠️ 先调 MCP，后看文本：**
 ```python
-steps = mcp__claude-mcp__workflow_step("<slug>", workflow="wrap", "init")
+steps = mcp__claude-mcp__workflow_step("<slug>", workflow="wrap", phase="init")
 # MCP 失败或 10s 超时 → 读本文件文本退化为手动模式。
 ```
 
@@ -33,7 +33,7 @@ git -C "<project_path>" diff HEAD~1 --stat
 
 **附带跑 `/ponytail-gain`**：展示 ponytail 基准指标（代码量/成本/速度节省中位数），一次性记分板，不放常驻模式。
 
-**检查工作流健康**：调用 `workflow_health(slug)`。汇总本次会话中所有降级事件（fallbacks）和规则拦截（blocks），输出到 wrap 总结里。用户看到这些就知道哪里踩坑了。
+**检查工作流健康**：调用 `mcp__claude-mcp__workflow_health(slug)`。汇总本次会话中所有降级事件（fallbacks）和规则拦截（blocks），输出到 wrap 总结里。用户看到这些就知道哪里踩坑了。
 
 **压缩上下文再保存**：调用 `headroom_compress` 把当前会话的关键上下文压缩精简，确保 wrap 输出的经验不会随 context 膨胀而丢失。
 
@@ -60,7 +60,7 @@ git -C "<project_path>" diff HEAD~1 --stat
 从 commit message body 提取手动验证步骤（格式 `验证:` 或 `Verify:` 或 `- [ ]` 开头的行），逐个调用：
 
 ```python
-checklist_append("<slug>", module="<模块/页面>", step="<验证步骤>", source="<commit hash>")
+mcp__claude-mcp__checklist_append("<slug>", module="<模块/页面>", step="<验证步骤>", source="<commit hash>")
 ```
 
 MCP 自动去重（同文本不重复加）、自动分模块段落。
@@ -111,7 +111,7 @@ type: feedback
 经验如果是**可复现的 bug 模式**，调用 MCP：
 
 ```python
-patterns_append("<slug>",
+mcp__claude-mcp__patterns_append("<slug>",
   id="<project>-<short-slug>",
   pattern="<一句话：问题现象 + 修复方式>",
   symptoms=["<报错关键词>", "<堆栈函数名>", "<现象描述>"],
@@ -149,7 +149,7 @@ MCP 自动处理：同 id → count+1；新 symptoms 合并不重复。
 
 ### 收尾清理
 
-- `session_cleanup("<slug>")` — 删除 session（工作流已完成）
+- `mcp__claude-mcp__session_cleanup("<slug>")` — 删除 session（工作流已完成）
 - 已合并的分支 → `Skill("commit-commands:clean_gone")` 清理本地 [gone] 分支
 - 部分完成且有明确下一步 → `Skill("to-issues")` 把剩余工作拆成 Issue
 

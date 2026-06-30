@@ -16,13 +16,13 @@ model_hint: standard
 
 **⚠️ 每个 phase 开头先调 MCP：**
 ```python
-steps = mcp__claude-mcp__workflow_step("<slug>", workflow="fix", "<phase>", context={"symptoms": [...], "files": [...]})
+steps = mcp__claude-mcp__workflow_step("<slug>", workflow="fix", phase="<phase>", context={"symptoms": [...], "files": [...]})
 # MCP 失败或 10s 超时 → 读本文件文本退化为手动模式。
 ```
 
 ## Phase -1: Resume Check
 
-调用 `session_read("<slug>")`。
+调用 `mcp__claude-mcp__session_read("<slug>")`。
 
 **session 存在且 `phase` 不是 `init`**：
 展示当前进度（phase + checks），问用户"继续还是重头来？"
@@ -57,7 +57,7 @@ steps = mcp__claude-mcp__workflow_step("<slug>", workflow="fix", "<phase>", cont
 调用 MCP：
 
 ```python
-patterns_match("<slug>", symptoms=["<报错关键词>", "<堆栈函数>"], files=["<出问题的文件>"])
+mcp__claude-mcp__patterns_match("<slug>", symptoms=["<报错关键词>", "<堆栈函数>"], files=["<出问题的文件>"])
 ```
 
 **⚠️ MCP 调用失败（server 没配/挂了）？** 直接跳到 Phase 1 诊断，不阻塞。别报错，别重试。patterns 只是加速器，不是闸门。
@@ -166,16 +166,16 @@ Ship 完成后提示用户 `Skill("wrap")` 收尾沉淀经验。
 每个 phase 结束时调用 MCP：
 
 ```python
-session_write("<slug>", workflow="fix", phase="<current>", checks={...})
+mcp__claude-mcp__session_write("<slug>", workflow="fix", phase="<current>", checks={...})
 ```
 
-- Phase 0 分诊决定诊断：`session_write("<slug>", workflow="fix", phase="diagnose")`
-- Phase 1 诊断完成：`session_write("<slug>", phase="plan")`
-- Phase 2 方案确定：`session_write("<slug>", phase="baseline", checks={"grill_me_done": True}  # 复杂修复)`
-- Phase 3 基线通过：`session_write("<slug>", phase="fixing", checks={"build_passed": True})`
-- Phase 4 修复完成：`session_write("<slug>", phase="review")`
+- Phase 0 分诊决定诊断：`mcp__claude-mcp__session_write("<slug>", workflow="fix", phase="diagnose")`
+- Phase 1 诊断完成：`mcp__claude-mcp__session_write("<slug>", phase="plan")`
+- Phase 2 方案确定：`mcp__claude-mcp__session_write("<slug>", phase="baseline", checks={"grill_me_done": True}  # 复杂修复)`
+- Phase 3 基线通过：`mcp__claude-mcp__session_write("<slug>", phase="fixing", checks={"build_passed": True})`
+- Phase 4 修复完成：`mcp__claude-mcp__session_write("<slug>", phase="review")`
 - Phase 5 Review 每项完成：更新对应 check
-- Phase 6 Ship 后 → `session_cleanup("<slug>")`
+- Phase 6 Ship 后 → `mcp__claude-mcp__session_cleanup("<slug>")`
 
 ## 失败回环
 
