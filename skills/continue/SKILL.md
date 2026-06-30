@@ -55,6 +55,12 @@ git -C "<project_path>" status
 git -C "<project_path>" stash list
 ```
 
+## Step 4b: Read claude-mem Context
+
+如果 claude-mem worker 可用（`http://localhost:37777`），读取该项目的历史会话记录——claude-mem 自动捕捉了上次会话中的代码阅读、编辑、命令执行等操作。作为 git log 的补充，帮你理解"上次到底在折腾什么"。
+
+无 claude-mem 时跳过，不影响其余恢复流程。
+
 ## Step 5: Rebuild Context
 
 **从 session.json 取精确状态**（如有）：

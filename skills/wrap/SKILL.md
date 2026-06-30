@@ -25,6 +25,10 @@ git -C "<project_path>" diff HEAD~1 --stat
 
 多 commit 时用 `git diff main..HEAD --stat` 代替 `HEAD~1`。
 
+**附带跑 `/ponytail-gain`**：展示 ponytail 基准指标（代码量/成本/速度节省中位数），一次性记分板，不放常驻模式。
+
+**压缩上下文再保存**：调用 `headroom_compress` 把当前会话的关键上下文压缩精简，确保 wrap 输出的经验不会随 context 膨胀而丢失。
+
 输出：
 
 ```

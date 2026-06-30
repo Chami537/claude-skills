@@ -59,6 +59,8 @@ model_hint: standard
 
 下次 start 先读这个文件，存在且项目文件未变就跳过检测。
 
+**检查 claude-mem**：如果 claude-mem worker 在运行（`curl -s http://localhost:37777` 可达），说明跨会话记忆已激活。当前项目的历史上下文将在后续 step 中自动注入。
+
 ## Step 3: Check Session State
 
 调用 MCP 工具：
@@ -85,7 +87,9 @@ session_read("<slug>")
 
 ## Step 4: Present Status
 
-用 **Read 工具**读 `<project_path>/CLAUDE.md`。
+**先看有没有知识图谱**：检查 `<project_path>/graphify-out/GRAPH_REPORT.md` 是否存在。如果之前跑过 `/graphify .`，直接读这份报告——它用自然语言描述了项目架构、模块关系、关键依赖，比从头扫代码快 10 倍。
+
+用 **Read 工具**读 `<project_path>/CLAUDE.md` + 图谱报告（如有）。
 
 用 `git -C "<project_path>"` 读 git 状态：
 

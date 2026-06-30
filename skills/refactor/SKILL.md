@@ -39,10 +39,15 @@ model_hint: opus
 
 ## Phase 1: Measure & Assess
 
-**只跑相关的，别全跑：**
+**先跑 ponytail 审计**：`/ponytail-audit` — 全仓库扫描过度工程，输出一份按优先级排序的"该删什么/该简化什么"清单。这份清单直接作为 refactor 目标的输入。
+
+**同时用代码图谱快速理解目标区域**：`tokensave_context(task="<要重构的是什么>", mode="plan")` — 在改之前先看清依赖关系和调用链，避免重构时改断东西。
+
+**然后按需补量**，别全跑：
 
 | 场景 | 用这个 |
 |------|--------|
+| 过度工程/冗余（ponytail 已覆盖） | `/ponytail-audit` 结果直接跳 Phase 2 规划拆除 |
 | 性能/卡顿 | `Skill("pensive:performance-review")` |
 | 代码腐化/重复 | `Skill("pensive:code-refinement")` |
 | 死代码太多 | `Skill("conserve:unbloat")` |
@@ -93,6 +98,8 @@ python -m pytest                              # Python
 - 影响面分析 → `Skill("pensive:blast-radius")`
 
 - 代码审查 → `Skill("simplify")`
+- 过度工程回访 → `/ponytail-review`（确认这次改完后没有留下新的过度工程）
+- **涉及 UI 组件改动** → 跑 `ui-ux-pro-max` 的 UX 指南对照，确认没有引入视觉退化或交互不一致
 - 大范围重构 → `Skill("pensive:unified-review")`（多维度全面审查）
 - **验证改后指标** — 对比 Phase 1，有没有改善？
 

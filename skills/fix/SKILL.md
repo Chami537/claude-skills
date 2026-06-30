@@ -95,7 +95,7 @@ Skill("diagnose")
 
 不许猜。用日志/断点/二分法定位到具体行。
 
-**复杂 Bug、根因有多个假设？** → 调用 `Skill("grill-me")` 拷问每个假设，避免修错方向。
+**复杂 Bug、根因有多个假设？** → 先调用 `superpowers:systematic-debugging` 走结构化调试流程（Reproduce→Minimize→Hypothesize→Instrument→Verify），同时调用 `Skill("grill-me")` 拷问每个假设，避免修错方向。
 
 ## Phase 2: Plan
 
@@ -134,7 +134,8 @@ python -m pytest           # Python（如果有测试）
 ## Phase 5: Review `[可跳过：typo/单行修复/配置修改/文案修改]`
 
 - 快速检查 → `Skill("simplify")`
-- 影响面评估（多文件改动）→ `Skill("pensive:blast-radius")`
+- 过度工程检查 → `/ponytail-review`（修复代码是否引入了不必要的复杂度和抽象）
+- 影响面评估（多文件改动）→ 先 `tokensave_impact` 图谱感知影响分析，再 `Skill("pensive:blast-radius")` 交叉验证
 - 系统性 Bug 模式 → `Skill("code-audit")` — 排查同类问题是否在其他地方存在
 
 ## Phase 6: Ship

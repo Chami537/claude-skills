@@ -51,9 +51,11 @@ model_hint: opus
 但跨 3 文件以上的改动（即使每处很小），建议走 EnterPlanMode 对齐方案，避免改完方向不一致。
 
 **M / L 规模**：`EnterPlanMode` 出完整方案：
-1. 用 `Agent (Explore)` 理解现有代码
-2. 设计架构，列出要改动/新建的文件
-3. `ExitPlanMode` 提交审批
+1. **先跑 `/ponytail-audit`** 扫描项目中已存在的过度工程——避免在新方案里复刻同类冗余
+2. **新技术选型？** → `Skill("research-deep")` 做结构化技术调研（多源搜索→交叉验证→合规评估→报告），把 `research-outline.md` 产出作为设计输入。**涉及外部库/API/框架选择时**，同步用 `agent-reach` 搜 GitHub issue 讨论、Twitter 用户反馈、Reddit 社区评价——看真实使用体验不看官方文档
+	3. **用代码图谱理解现有代码**：`tokensave_context(task="<本功能描述>", mode="plan")` — 返回相关符号、依赖关系、扩展点。比盲扫代码准，比 Agent(Explore) 快且省 token。需要深入细节时再用 `Agent (Explore)` 补充
+4. 设计架构，列出要改动/新建的文件。**每个新增组件自问 ponytail 六步前三步**：这事必须存在吗？标准库能搞定吗？平台原生支持吗？
+5. `ExitPlanMode` 提交审批
 
 架构取舍多 → `Skill("grill-me")`。需要原型 → `Skill("prototype")`。
 
@@ -81,6 +83,10 @@ model_hint: opus
 
 需要大规模调研时用 `Agent (Explore)`。
 
+**涉及 UI 的改动**（Compose / Flutter / React / Vue 等）：自动激活 `ui-ux-pro-max` + `ui-styling`，注入设计风格/配色/字体/UX 指南，消除 AI 味。
+
+**M/L 规模、多模块并行开发**：调用 `superpowers:dispatching-parallel-agents` 将独立模块分派给并行 subagent 开发，最后汇总。
+
 ## Phase 3: Verify
 
 **有测试的项目**：跑测试，确认全绿。
@@ -101,7 +107,8 @@ python -m pytest           # Python
 
 - 正式审查 → `Skill("pensive:unified-review")`
 - 快速检查 → `Skill("simplify")`
-- 影响面评估 → `Skill("pensive:blast-radius")`
+- 过度工程检查 → `/ponytail-review`（审查本次 diff，砍掉不必要的抽象/依赖/代码量）
+- 影响面评估 → 先 `tokensave_impact` 做图谱感知的变化影响分析（自动找出受影响节点），再 `Skill("pensive:blast-radius")` 交叉验证
 - Bug 自查（M/L 建议跑）→ `Skill("code-audit")` — 扫出新问题可选跳 `Skill("fix")`
 
 ## Phase 5: Harden `[L 规模，或涉及认证/支付/权限/敏感数据]`
@@ -130,7 +137,7 @@ session_write("<slug>", workflow="dev", phase="<current>", checks={...})
 - Phase 0 确定规模后：`session_write("<slug>", workflow="dev", phase="plan", scale="M")`
 - Phase 1 方案审批通过：`session_write("<slug>", phase="build", checks={"grill_me_done": True}  # L 规模)`
 - Phase 3 编译通过：`session_write("<slug>", phase="verify", checks={"build_passed": True})`
-- Phase 4 Review 完成：`session_write("<slug>", phase="review", checks={"simplify_done": True, ...})`
+- Phase 4 Review 完成：`session_write("<slug>", phase="review", checks={"simplify_done": True, "ponytail_review_done": True, ...})`
 - Phase 5 Harden 完成：`session_write("<slug>", phase="harden")`
 - Phase 6 Ship 后 → `session_cleanup("<slug>")`
 
