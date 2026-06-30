@@ -15,6 +15,13 @@ model_hint: opus
 
 改之前先量，改之后验证改善。
 
+**⚠️ 每个 phase 开头先调 MCP，返回的步骤列表是权威指令：**
+```python
+steps = mcp__claude-mcp__workflow_step("<slug>", "refactor", "<phase>", context={"task": "<描述>"})
+# 返回 {"steps": [...], "total": N}。逐项执行。
+# MCP 失败或 10 秒超时 → 读本文件文本描述退化为手动模式。
+```
+
 ## Phase 0: Resume Check
 
 调用 `session_read("<slug>")`。

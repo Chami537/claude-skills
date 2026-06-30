@@ -14,6 +14,12 @@ model_hint: standard
 
 每次开发收尾做三件事：回顾变更、提炼经验、更新进度。
 
+**⚠️ 先调 MCP，后看文本：**
+```python
+steps = mcp__claude-mcp__workflow_step("<slug>", "wrap", "init")
+# MCP 失败或 10s 超时 → 读本文件文本退化为手动模式。
+```
+
 ## Step 1: Summarize What Was Done
 
 先确定项目路径。优先从 conversation 上下文中推断（最近 git 操作的目标目录），推断不出就问用户。

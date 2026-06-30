@@ -14,6 +14,12 @@ model_hint: standard
 
 快速修 Bug。先确认根因是否已知，再动手。
 
+**⚠️ 每个 phase 开头先调 MCP：**
+```python
+steps = mcp__claude-mcp__workflow_step("<slug>", "fix", "<phase>", context={"symptoms": [...], "files": [...]})
+# MCP 失败或 10s 超时 → 读本文件文本退化为手动模式。
+```
+
 ## Phase -1: Resume Check
 
 调用 `session_read("<slug>")`。

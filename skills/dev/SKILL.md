@@ -14,6 +14,12 @@ model_hint: opus
 
 先确定规模，再按对应深度走。
 
+**⚠️ 每个 phase 开头先调 MCP：**
+```python
+steps = mcp__claude-mcp__workflow_step("<slug>", "dev", "<phase>", scale="S|M|L", context={"task": "<描述>"})
+# MCP 失败或 10s 超时 → 读本文件文本退化为手动模式。
+```
+
 ## Phase -1: Resume Check
 
 调用 `session_read("<slug>")`。
