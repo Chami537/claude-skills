@@ -13,6 +13,12 @@ model_hint: standard
 
 # Start: Session Initialization
 
+**⚠️ 先调 MCP 再读文本：**
+```python
+steps = mcp__claude-mcp__workflow_step("<slug>", "start", "init")
+# MCP 失败或 10s 超时 → 读本文件文本退化为手动模式。
+```
+
 开始一次开发会话。确定在哪个项目、做什么。
 
 **全流程**: `start → {dev|fix|refactor} → wrap`（中间可能走 grill-me / diagnose / code-audit）

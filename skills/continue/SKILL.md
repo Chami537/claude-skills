@@ -16,6 +16,13 @@ model_hint: standard
 
 新会话打开项目时，秒级重建上下文。不靠记忆，靠 git 和 CLAUDE.md。
 
+**⚠️ Step 1 前先调 MCP：**
+```python
+steps = mcp__claude-mcp__workflow_step("<slug>", "continue", "init")
+# MCP 失败或 10s 超时 → 读本文件文本退化为手动模式。
+# 特别：MCP session_read 优于 tokensave session_recall（后者对未索引项目卡死）
+```
+
 ## Step 1: Locate Project
 
 1. 从 conversation context 读取上次 git -C 的目标路径
