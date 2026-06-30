@@ -145,3 +145,7 @@ def workflow_log_event(slug: str, event_type: str, detail: dict | None = None) -
     elif event_type == "dep_check":
         workflow.log_dependency_status(slug, detail)
     return {"logged": True, "event": event_type}
+
+if __name__ == "__main__":
+    mcp.run()
+
