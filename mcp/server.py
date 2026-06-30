@@ -23,9 +23,11 @@ def session_read(slug: str) -> dict:
 
 @mcp.tool()
 def session_write(slug: str, workflow: str | None = None, phase: str | None = None,
-                  checks: dict | None = None, **kwargs) -> dict:
+                  checks: dict | None = None, scale: str | None = None,
+                  has_tests: bool | None = None, branch: str | None = None,
+                  platform: str | None = None) -> dict:
     """Write/merge session.json. Only pass fields you want to update. Phase transitions validated server-side."""
-    return session.write(slug, workflow=workflow, phase=phase, checks=checks, **kwargs)
+    return session.write(slug, workflow=workflow, phase=phase, checks=checks, scale=scale, has_tests=has_tests, branch=branch, platform=platform)
 
 
 @mcp.tool()
