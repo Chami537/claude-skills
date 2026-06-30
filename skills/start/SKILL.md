@@ -15,7 +15,7 @@ model_hint: standard
 
 **⚠️ 先调 MCP 再读文本：**
 ```python
-steps = mcp__claude-mcp__workflow_step("<slug>", "start", "init")
+steps = mcp__claude-mcp__workflow_step("<slug>", workflow="start", "init")
 # MCP 失败或 10s 超时 → 读本文件文本退化为手动模式。
 ```
 

@@ -24,7 +24,7 @@ VALID_CHECKS = [
     "code_audit_done", "metrics_improved", "grill_me_done",
 ]
 
-SLUG_PATTERN = re.compile(r"^[a-z0-9][a-z0-9_-]*$")
+SLUG_PATTERN = re.compile(r"^[a-z0-9一-鿿][a-z0-9_一-鿿-]*$")
 
 ALLOWED_TRANSITIONS = {
     "dev": {
@@ -57,8 +57,8 @@ def _validate_slug(slug: str) -> str | None:
     """Validate slug. Returns error string or None if valid."""
     if not slug or not slug.strip():
         return "slug must not be empty"
-    if slug != slug.lower():
-        return f"slug '{slug}' must be lowercase"
+    if slug.isascii() and slug != slug.lower():
+        return f"slug '{slug}' must be lowercase (ASCII only rule)"
     if not SLUG_PATTERN.match(slug):
         return f"slug '{slug}' contains invalid characters (a-z, 0-9, -, _ only)"
     return None

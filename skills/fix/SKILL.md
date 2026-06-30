@@ -16,7 +16,7 @@ model_hint: standard
 
 **⚠️ 每个 phase 开头先调 MCP：**
 ```python
-steps = mcp__claude-mcp__workflow_step("<slug>", "fix", "<phase>", context={"symptoms": [...], "files": [...]})
+steps = mcp__claude-mcp__workflow_step("<slug>", workflow="fix", "<phase>", context={"symptoms": [...], "files": [...]})
 # MCP 失败或 10s 超时 → 读本文件文本退化为手动模式。
 ```
 

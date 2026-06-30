@@ -18,7 +18,7 @@ model_hint: standard
 
 **⚠️ Step 1 前先调 MCP：**
 ```python
-steps = mcp__claude-mcp__workflow_step("<slug>", "continue", "init")
+steps = mcp__claude-mcp__workflow_step("<slug>", workflow="continue", phase="init")
 # MCP 失败或 10s 超时 → 读本文件文本退化为手动模式。
 # 特别：MCP session_read 优于 tokensave session_recall（后者对未索引项目卡死）
 ```
