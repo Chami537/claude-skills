@@ -53,7 +53,19 @@ model_hint: opus
 **M / L 规模**：`EnterPlanMode` 出完整方案：
 1. **先跑 `/ponytail-audit`** 扫描项目中已存在的过度工程——避免在新方案里复刻同类冗余
 2. **新技术选型？** → `Skill("research-deep")` 做结构化技术调研（多源搜索→交叉验证→合规评估→报告），把 `research-outline.md` 产出作为设计输入。**涉及外部库/API/框架选择时**，同步用 `agent-reach` 搜 GitHub issue 讨论、Twitter 用户反馈、Reddit 社区评价——看真实使用体验不看官方文档
-	3. **用代码图谱理解现有代码**：`tokensave_context(task="<本功能描述>", mode="plan")` — 返回相关符号、依赖关系、扩展点。比盲扫代码准，比 Agent(Explore) 快且省 token。需要深入细节时再用 `Agent (Explore)` 补充
+	3. **用代码图谱理解现有代码**：`tokensave_context(task="<本功能描述>", mode="plan")` — 返回相关符号、依赖关系、扩展点。
+
+   **⚠️ 图谱无结果 ≠ 项目没有结构。** 新项目/未索引时，`tokensave_context` 可能返回空。必须走回退链，不跳步：
+
+   | 顺序 | 工具 | 适用场景 |
+   |------|------|---------|
+   | ① | `tokensave_context` | 首选，自然语言描述 |
+   | ② | `tokensave_search(query="<关键符号名>")` | 按函数/类名精确搜索 |
+   | ③ | `tokensave_dependencies` | 从已知入口顺藤摸瓜找依赖链 |
+   | ④ | `tokensave_similar` | 从已经知道的一两个文件找相似代码 |
+   | ⑤ | `Agent (Explore)` | 最后兜底——全量扫，但费 token |
+
+   **禁止 `tokensave_context` 返回空后直接转手动 Read + Grep。** 必须依次尝试 ②→④ 再 fallback 到 ⑤。每步无结果才进下一步。
 4. 设计架构，列出要改动/新建的文件。**每个新增组件自问 ponytail 六步前三步**：这事必须存在吗？标准库能搞定吗？平台原生支持吗？
 5. `ExitPlanMode` 提交审批
 

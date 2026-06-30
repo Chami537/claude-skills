@@ -43,6 +43,9 @@ model_hint: opus
 
 **同时用代码图谱快速理解目标区域**：`tokensave_context(task="<要重构的是什么>", mode="plan")` — 在改之前先看清依赖关系和调用链，避免重构时改断东西。
 
+   **⚠️ 图谱无结果时的回退链**（依次尝试，每步无结果才进下一步）：
+   ① `tokensave_context` → ② `tokensave_search` → ③ `tokensave_dependencies` → ④ `tokensave_similar` → ⑤ `Agent(Explore)` 兜底。**禁止跳回手动 Read + Grep。**
+
 **然后按需补量**，别全跑：
 
 | 场景 | 用这个 |
