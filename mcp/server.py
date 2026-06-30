@@ -8,7 +8,7 @@ from mcp.server.fastmcp import FastMCP
 import tools.session as session
 import tools.patterns as patterns
 import tools.checklist as checklist
-import tools.workflow as workflow
+import tools.workflow as wf
 
 mcp = FastMCP("claude-mcp")
 
@@ -93,7 +93,7 @@ def workflow_step(slug: str, workflow: str, phase: str, scale: str | None = None
     
     Returns: {workflow, phase, scale, steps: [{action, skill/tool, reason, condition, fallback}], total}
     """
-    return workflow.step(slug, workflow, phase, scale=scale, context=context)
+    return wf.step(slug, workflow, phase, scale=scale, context=context)
 
 
 @mcp.tool()
@@ -110,7 +110,7 @@ def code_graph_resolve(slug: str, task: str, mode: str = "explore") -> dict:
     
     Rule: NEVER fall back to manual Read + Grep. Follow the chain.
     """
-    return workflow.code_graph_resolve(slug, task, mode=mode)
+    return wf.code_graph_resolve(slug, task, mode=mode)
 
 
 # ── Health & observability ─────────────────────────────────────
@@ -122,7 +122,7 @@ def workflow_health(slug: str) -> dict:
     Call this at /wrap start and whenever the user asks "anything go wrong?".
     Returns summary of all fallback events and rule blocks for this project.
     """
-    return workflow.health_report(slug)
+    return wf.health_report(slug)
 
 
 @mcp.tool()
@@ -141,11 +141,11 @@ def workflow_log_event(slug: str, event_type: str, detail: dict | None = None) -
     """
     detail = detail or {}
     if event_type == "fallback":
-        workflow.log_fallback(slug, detail.get("tool", ""), detail.get("reason", ""), detail.get("next", ""))
+        wf.log_fallback(slug, detail.get("tool", ""), detail.get("reason", ""), detail.get("next", ""))
     elif event_type == "rule_blocked":
-        workflow.log_rule_block(slug, detail.get("rule", ""), detail.get("detail", ""))
+        wf.log_rule_block(slug, detail.get("rule", ""), detail.get("detail", ""))
     elif event_type == "dep_check":
-        workflow.log_dependency_status(slug, detail)
+        wf.log_dependency_status(slug, detail)
     return {"logged": True, "event": event_type}
 
 if __name__ == "__main__":
