@@ -109,3 +109,39 @@ def code_graph_resolve(slug: str, task: str, mode: str = "explore") -> dict:
     Rule: NEVER fall back to manual Read + Grep. Follow the chain.
     """
     return workflow.code_graph_resolve(slug, task, mode=mode)
+
+
+# ── Health & observability ─────────────────────────────────────
+
+@mcp.tool()
+def workflow_health(slug: str) -> dict:
+    """Check workflow health: how many fallbacks triggered, how many hard rules blocked, dependency status.
+    
+    Call this at /wrap start and whenever the user asks "anything go wrong?".
+    Returns summary of all fallback events and rule blocks for this project.
+    """
+    return workflow.health_report(slug)
+
+
+@mcp.tool()
+def workflow_log_event(slug: str, event_type: str, detail: dict | None = None) -> dict:
+    """Log a workflow event: fallback, rule_blocked, or dep_check.
+    
+    The agent calls this whenever a tool falls back or a hard rule fires.
+    This creates an audit trail that workflow_health() surfaces later.
+    
+    Args:
+        slug: project slug
+        event_type: "fallback" | "rule_blocked" | "dep_check"
+        detail: {"tool": "...", "reason": "...", "next": "..."} for fallbacks,
+                {"rule": "...", "detail": "..."} for blocks,
+                {"claude_mem": "online"|"offline", "graphify": "exists"|"missing", ...} for deps
+    """
+    detail = detail or {}
+    if event_type == "fallback":
+        workflow.log_fallback(slug, detail.get("tool", ""), detail.get("reason", ""), detail.get("next", ""))
+    elif event_type == "rule_blocked":
+        workflow.log_rule_block(slug, detail.get("rule", ""), detail.get("detail", ""))
+    elif event_type == "dep_check":
+        workflow.log_dependency_status(slug, detail)
+    return {"logged": True, "event": event_type}

@@ -129,6 +129,8 @@ python -m pytest           # Python
 - 影响面评估 → 先 `tokensave_impact` 做图谱感知的变化影响分析（自动找出受影响节点），再 `Skill("pensive:blast-radius")` 交叉验证
 - Bug 自查（M/L 建议跑）→ `Skill("code-audit")` — 扫出新问题可选跳 `Skill("fix")`
 
+**Review 结束后**：log所有降级事件：`workflow_log_event(slug, "dep_check", {...})` — tokensave空了？graphify没生成？claude-mem不在线？记录清楚，/wrap 时汇总展示。
+
 ## Phase 5: Harden `[L 规模，或涉及认证/支付/权限/敏感数据]`
 
 - 安全敏感代码 → `Skill("pensive:harden")`

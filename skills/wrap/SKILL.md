@@ -27,6 +27,8 @@ git -C "<project_path>" diff HEAD~1 --stat
 
 **附带跑 `/ponytail-gain`**：展示 ponytail 基准指标（代码量/成本/速度节省中位数），一次性记分板，不放常驻模式。
 
+**检查工作流健康**：调用 `workflow_health(slug)`。汇总本次会话中所有降级事件（fallbacks）和规则拦截（blocks），输出到 wrap 总结里。用户看到这些就知道哪里踩坑了。
+
 **压缩上下文再保存**：调用 `headroom_compress` 把当前会话的关键上下文压缩精简，确保 wrap 输出的经验不会随 context 膨胀而丢失。
 
 输出：
