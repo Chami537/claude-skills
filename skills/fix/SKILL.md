@@ -54,6 +54,8 @@ model_hint: standard
 patterns_match("<slug>", symptoms=["<报错关键词>", "<堆栈函数>"], files=["<出问题的文件>"])
 ```
 
+**⚠️ MCP 调用失败（server 没配/挂了）？** 直接跳到 Phase 1 诊断，不阻塞。别报错，别重试。patterns 只是加速器，不是闸门。
+
 返回结果按置信度排序：
 - `confidence: "high"` — 症状+文件都命中 → **高置信度，可直接用已有方案**
 - `confidence: "low"` — 只命中一项 → 作为提示

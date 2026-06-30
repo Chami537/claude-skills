@@ -59,7 +59,7 @@ git -C "<project_path>" stash list
 
 如果 claude-mem worker 可用（`http://localhost:37777`），读取该项目的历史会话记录——claude-mem 自动捕捉了上次会话中的代码阅读、编辑、命令执行等操作。作为 git log 的补充，帮你理解"上次到底在折腾什么"。
 
-无 claude-mem 时跳过，不影响其余恢复流程。
+**worker 不可用（端口连不上）？** 一句话告诉用户然后跳过：`claude-mem worker 不在线，本次没有跨会话历史。用 `npx claude-mem start` 可以拉起。` 不要因为这个阻塞恢复流程。
 
 ## Step 5: Rebuild Context
 

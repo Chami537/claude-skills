@@ -37,13 +37,14 @@ model_hint: opus
 
 ## Phase 0: Size Triage
 
-| 规模 | 特征 | 流程深度 |
-|------|------|---------|
-| **S** | 单文件 **且** <50 行 **且** 无新依赖 | Plan(口头) → Build → Verify → Ship |
-| **M** | 多文件、涉及数据层/UI | Plan → Build → Review → Verify → Ship |
-| **L** | 新模块、架构变更、API 设计 | 完整流程：Plan → Build → Review → Harden → Ship |
+| 规模 | 特征 | 流程深度 | ponytail |
+|------|------|---------|----------|
+| **S** | 单文件 **且** <50 行 **且** 无新依赖 | Plan(口头) → Build → Verify → Ship | 跳过 audit（杀鸡不用牛刀） |
+| **M** | 多文件、涉及数据层/UI | Plan → Build → Review → Verify → Ship | Phase 1 跑 audit |
+| **L** | 新模块、架构变更、API 设计 | 完整流程：Plan → Build → Review → Harden → Ship | Phase 1 跑 audit |
 
 不确定就往上取。需求本身模糊、不知道怎么拆？→ `Skill("grill-me")` 先把需求拷问清楚再动手。
+**快速修复/配置修改/文案改动**：dev 不是唯一入口——这种直接让 agent 改，不用走完整 dev 流程。
 
 ## Phase 1: Plan & Design
 

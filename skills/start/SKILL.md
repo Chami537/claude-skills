@@ -89,6 +89,15 @@ session_read("<slug>")
 
 **先看有没有知识图谱**：检查 `<project_path>/graphify-out/GRAPH_REPORT.md` 是否存在。如果之前跑过 `/graphify .`，直接读这份报告——它用自然语言描述了项目架构、模块关系、关键依赖，比从头扫代码快 10 倍。
 
+**没有图谱？** 如果是你第一次进这个项目（或项目结构大改过），在 Step 4 末尾问用户：
+
+```
+这个项目还没生成知识图谱，要不要跑 `/graphify .` 分析一下？
+以后每次 start 都能秒读项目结构，token 消耗降 71 倍。（2-5 分钟）
+```
+
+用户说好 → 跑 `graphify .`，等生成完再继续展示状态。用户说跳过 → 继续。
+
 用 **Read 工具**读 `<project_path>/CLAUDE.md` + 图谱报告（如有）。
 
 用 `git -C "<project_path>"` 读 git 状态：
