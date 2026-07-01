@@ -1,16 +1,19 @@
 ---
 name: code-audit
 description: Project-wide bug scan. Patterns, ponytail, memory, checklist.
+alwaysApply: false
 trigger: audit, 查bug, 自查, 扫描问题, 代码审查
-**第一步 — 调用 MCP（参数名必须精确，不要发明参数）：**
+---
 
-```
+```python
 mcp__claude-mcp__workflow_step(
-    slug="personalwebsite",       # ← 必须叫 slug，不是 project
+    slug="<项目slug>",            # 必须叫 slug，不是 project
     workflow="code-audit",
     phase="init"
 )
 ```
+
+扫描链: patterns_list -> ponytail-debt -> ponytail-audit -> 通用清单。先查后修。
 
 ---
 

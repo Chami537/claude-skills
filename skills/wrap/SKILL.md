@@ -4,15 +4,17 @@ description: Post-development retro. Summarize, capture lessons, update progress
 alwaysApply: false
 trigger: wrap, /wrap, 总结, 回顾, 复盘, retro, 收尾, done
 model_hint: standard
-**第一步 — 调用 MCP（参数名必须精确，不要发明参数）：**
+---
 
-```
+```python
 mcp__claude-mcp__workflow_step(
-    slug="personalwebsite",       # ← 必须叫 slug，不是 project
+    slug="<项目slug>",            # 必须叫 slug，不是 project
     workflow="wrap",
     phase="init"
 )
 ```
+
+MCP 自动写 CLAUDE.md (claude_md_append) + 自动存 memory (memory_save)。
 
 ---
 
