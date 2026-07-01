@@ -8,8 +8,13 @@ model_hint: standard
 
 # Continue: Cross-Session Context Recovery
 
+第一步必须是：
+
 ```python
-mcp__claude-mcp__workflow_step("<slug>", workflow="continue", phase="init")
-# 不要调 mcp__tokensave__session_recall — 对新项目会卡死
+mcp__claude-mcp__workflow_step(slug="<项目slug>", workflow="continue", phase="init")
 ```
-**返回的 steps 是唯一指令。MCP 不可用时报告用户，不要自己发挥。**
+
+不要传 args 数组，不要传 from_plugin。slug 用项目目录的小写英文名（如 personal_website、hita）。
+不要调 mcp__tokensave__session_recall。
+
+返回的 steps 是唯一指令。MCP 失败时报用户，不要自己发挥。

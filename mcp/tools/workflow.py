@@ -89,7 +89,7 @@ DEV_HARDEN = [
     {"action":"skill","skill":"conserve:unbloat","condition":"dead code"},
 ]
 DEV_SHIP = [
-    {"action":"auto_update_claude_md","reason":"update CLAUDE.md after ship"},
+    {"action":"write_file","target":"<project>/CLAUDE.md","content":"append commit summary + project status","reason":"keep CLAUDE.md in sync"},
     {"action":"skill","skill":"commit-commands:commit-push-pr","condition":"M/L"},
     {"action":"skill","skill":"commit-commands:commit","condition":"S"},
 ]
@@ -138,7 +138,7 @@ DEV_HARDEN = [
     {"action":"skill","skill":"conserve:unbloat","condition":"dead code"},
 ]
 DEV_SHIP = [
-    {"action":"auto_update_claude_md","reason":"update CLAUDE.md after ship"},
+    {"action":"write_file","target":"<project>/CLAUDE.md","content":"append commit summary + project status","reason":"keep CLAUDE.md in sync"},
     {"action":"skill","skill":"commit-commands:commit-push-pr","condition":"M/L"},
     {"action":"skill","skill":"commit-commands:commit","condition":"S"},
 ]
@@ -203,7 +203,7 @@ DEV_HARDEN = [
     {"action":"skill","skill":"conserve:unbloat","condition":"dead code"},
 ]
 DEV_SHIP = [
-    {"action":"auto_update_claude_md","reason":"update CLAUDE.md after ship"},
+    {"action":"write_file","target":"<project>/CLAUDE.md","content":"append commit summary + project status","reason":"keep CLAUDE.md in sync"},
     {"action":"skill","skill":"commit-commands:commit-push-pr","condition":"M/L"},
     {"action":"skill","skill":"commit-commands:commit","condition":"S"},
 ]
@@ -305,7 +305,7 @@ DEV_HARDEN = [
     {"action":"skill","skill":"conserve:unbloat","condition":"dead code"},
 ]
 DEV_SHIP = [
-    {"action":"auto_update_claude_md","reason":"update CLAUDE.md after ship"},
+    {"action":"write_file","target":"<project>/CLAUDE.md","content":"append commit summary + project status","reason":"keep CLAUDE.md in sync"},
     {"action":"skill","skill":"commit-commands:commit-push-pr","condition":"M/L"},
     {"action":"skill","skill":"commit-commands:commit","condition":"S"},
 ]
@@ -357,8 +357,8 @@ WRAP = [
     {"action":"skill","skill":"ponytail-gain"},
     {"action":"mcp","tool":"workflow_health","reason":"check fallbacks and dep status"},
     {"action":"mcp","tool":"headroom_compress"},
-    {"action":"auto_update_claude_md","reason":"update CLAUDE.md with latest commit summary and project status"},
-    {"action":"auto_save_memory","reason":"save lessons and progress to memory without asking user"},
+    {"action":"write_file","target":"<project>/CLAUDE.md","content":"append latest commit summary + project status at end of file","reason":"keep CLAUDE.md in sync with actual progress"},
+    {"action":"write_memory","target":"~/.claude/projects/C--Users-Rinat/memory/","files":["project_<slug>.md","feedback_<lesson>.md"],"reason":"persist project progress and lessons learned"},
     {"action":"extract_lessons","skip_if":"trivial","auto_save":True},
     {"action":"mcp","tool":"checklist_append"},
     {"action":"mcp","tool":"patterns_append","condition":"novel bug"},
