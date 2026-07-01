@@ -13,11 +13,12 @@ except ImportError:
 BASE_DIR = os.path.expanduser("~/.claude/projects")
 SESSION_TTL = timedelta(hours=24)
 
-VALID_WORKFLOWS = ["dev", "fix", "refactor"]
+VALID_WORKFLOWS = ["dev", "fix", "refactor", "wrap"]
 VALID_PHASES = {
     "dev": ["init", "plan", "build", "verify", "review", "harden", "ship"],
     "fix": ["init", "diagnose", "plan", "baseline", "fixing", "review", "ship"],
     "refactor": ["init", "measure", "plan", "build", "verify", "review", "ship"],
+    "wrap": ["init", "save", "clean"],
 }
 VALID_CHECKS = [
     "build_passed", "simplify_done", "blast_radius_done",
@@ -43,6 +44,10 @@ ALLOWED_TRANSITIONS = {
         "plan": ["plan", "build"], "build": ["build", "verify"],
         "verify": ["verify", "review"], "review": ["review", "ship"],
         "ship": ["ship"],
+    },
+    "wrap": {
+        "init": ["init", "save"], "save": ["save", "clean"],
+        "clean": ["clean"],
     },
 }
 

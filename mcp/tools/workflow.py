@@ -352,16 +352,22 @@ START = [
     {"action":"route","to":["dev","fix","refactor","code-audit"]},
 ]
 
-WRAP = [
+WRAP_INIT = [
     {"action":"git_summary"},
     {"action":"skill","skill":"ponytail-gain"},
-    {"action":"mcp","tool":"workflow_health","reason":"check fallbacks and dep status"},
+    {"action":"mcp","tool":"workflow_health","reason":"fallbacks and dep status"},
     {"action":"mcp","tool":"headroom_compress","server":"headroom"},
-    {"action":"mcp","tool":"claude_md_append","reason":"append commit summary to CLAUDE.md (MCP writes directly to disk)"},
-    {"action":"mcp","tool":"memory_save","reason":"save project progress and lessons to memory (MCP writes directly to disk)"},
+]
+
+WRAP_SAVE = [
+    {"action":"mcp","tool":"claude_md_append","reason":"write CLAUDE.md — MCP direct disk write"},
+    {"action":"mcp","tool":"memory_save","reason":"save memory — MCP direct disk write"},
     {"action":"extract_lessons","skip_if":"trivial","auto_save":True},
     {"action":"mcp","tool":"checklist_append"},
     {"action":"mcp","tool":"patterns_append","condition":"novel bug"},
+]
+
+WRAP_CLEAN = [
     {"action":"mcp","tool":"session_cleanup"},
     {"action":"suggest","done":"clean_gone","partial":"to-issues"},
 ]
@@ -423,7 +429,9 @@ PHASE_MAP = {
     ("refactor","ship",None): [{"action":"auto_update_claude_md"},{"action":"skill","skill":"commit-commands:commit"}],
     ("start","init",None): START,
     ("continue","init",None): CONTINUE,
-    ("wrap","init",None): WRAP,
+    ("wrap","init",None): WRAP_INIT,
+    ("wrap","save",None): WRAP_SAVE,
+    ("wrap","clean",None): WRAP_CLEAN,
     ("code-audit","init",None): AUDIT,
 }
 
