@@ -151,3 +151,27 @@ def workflow_log_event(slug: str, event_type: str, detail: dict | None = None) -
 if __name__ == "__main__":
     mcp.run()
 
+
+# ── Auto-save tools ───────────────────────────────────────────
+
+@mcp.tool()
+def claude_md_append(slug: str, project_path: str, summary: str) -> dict:
+    """Append a dev summary to the project's CLAUDE.md. MCP writes directly to disk — no agent interpretation."""
+    import tools.auto_save as au
+    return au.claude_md_append(slug, project_path, summary)
+
+
+@mcp.tool()
+def memory_save(slug: str, memory_type: str, name: str, content: str,
+                description: str = "") -> dict:
+    """Save a memory file. MCP writes directly to disk — no agent interpretation.
+    
+    Args:
+        slug: project slug (hita, qqbot, etc.)
+        memory_type: feedback | project | user | reference
+        name: filename without .md
+        content: markdown body
+        description: one-line for the frontmatter
+    """
+    import tools.auto_save as au
+    return au.memory_save(slug, memory_type, name, content, description=description)
