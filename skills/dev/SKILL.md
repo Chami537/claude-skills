@@ -6,7 +6,10 @@ trigger: dev, /dev, new feature, implement, 开发, 新功能, 加个, 做一个
 model_hint: opus
 ---
 
+Phases: plan -> build -> verify -> review -> harden -> ship. GATE blocks advance until current phase steps are done.
+
 ```python
-mcp__claude-mcp__workflow_step(slug="<slug>", workflow="dev", phase="<phase>", scale="S|M|L", context={"task": "<desc>"})
+mcp__claude-mcp__workflow_step(slug="<slug>", workflow="dev", phase="plan", scale="S|M|L", context={"task": "<desc>"})
+# Then: phase="build", phase="verify", phase="review", phase="harden", phase="ship"
 ```
-THIS IS THE ONLY INSTRUCTION. Execute returned steps in order. If MCP fails, tell user "MCP down".
+Execute all steps -> mark_step_done each -> session_write(next_phase). MCP down = tell user.
