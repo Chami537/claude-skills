@@ -1,6 +1,6 @@
 ---
 name: ask-teacher
-description: Anti-stuck mechanism. Auto-triggered by MCP retry_limit_2 rule in dev/fix/refactor. Also manual: user says "问老师", "问一下老师", "卡住了问老师".
+description: "Anti-stuck mechanism. Auto-triggered by MCP retry_limit_2 rule. Also manual: user says 问老师."
 alwaysApply: false
 trigger: 问老师, 问一下老师, 卡住了问老师, 帮我问老师, 请教老师, ask teacher, stuck ask teacher
 ---
