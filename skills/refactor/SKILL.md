@@ -17,6 +17,10 @@ mcp__claude-mcp__workflow_step(
 
 Phase 1 Measure 先跑 Ponytail-audit。Phase 5 Review 对比 baseline。
 
+
+执行每个 step 后必须调 mark_step_done(slug, step_index)。全部做完才能 session_write 进下一个 phase。
+session_write 返回 GATE 错误 = 有步骤漏了，回去补完。
+
 ---
 
 # Refactor: Optimization & Refactoring Workflow

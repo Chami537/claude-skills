@@ -18,6 +18,10 @@ mcp__claude-mcp__workflow_step(
 
 scale 取值: S(单文件<50行 跳过Ponytail) M(多文件) L(新模块/架构变更)。
 
+
+执行每个 step 后必须调 mark_step_done(slug, step_index)。全部做完才能 session_write 进下一个 phase。
+session_write 返回 GATE 错误 = 有步骤漏了，回去补完。
+
 ---
 
 # Dev: New Feature Workflow
