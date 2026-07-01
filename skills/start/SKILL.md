@@ -14,7 +14,7 @@ mcp__claude-mcp__workflow_step(
 )
 ```
 
-项目映射: hita->E:/HITA_Agent, qqbot->E:/qqbot, personalwebsite->C:/Users/Rinat/Desktop/个人网站。
+项目映射: hita->E:/HITA_Agent, qqbot->E:/qqbot, personalwebsite->C:/Users/Rinat/Desktop/personalwebsite。
 
 ---
 

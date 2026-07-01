@@ -57,7 +57,7 @@
 
 ---
 
-## 个人网站 (Python/Flask + HTML/CSS/JS)
+## personalwebsite (Python/Flask + HTML/CSS/JS)
 
 | 陷阱 | 检查方法 | 级别 |
 |------|---------|------|
