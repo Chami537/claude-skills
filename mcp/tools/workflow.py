@@ -258,7 +258,7 @@ AUDIT = [
     {"action":"read_reference","fallback":"skip"},
     {"action":"scan","parallel":["patterns","ponytail","checklist"]},
     {"action":"report"},
-    {"action":"fix_confirm"},
+    {"action":"STOP_AND_WAIT","rule":"SHOW report. ASK user which items to fix. DO NOT auto-fix. Only proceed after user approval."},
 ]
 """Workflow orchestration engine v2.0 — single source of truth."""
 import os
@@ -373,7 +373,7 @@ AUDIT = [
     {"action":"read_reference","fallback":"skip"},
     {"action":"scan","parallel":["patterns","ponytail","checklist"]},
     {"action":"report"},
-    {"action":"fix_confirm"},
+    {"action":"STOP_AND_WAIT","rule":"SHOW report first. ASK user what to fix. DO NOT auto-fix."},
 ]
 
 # Shared init steps (start and continue both use these)
