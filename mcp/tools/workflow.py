@@ -250,7 +250,7 @@ START = [
     {"action":"route","to":["dev","fix","refactor","code-audit"]},
 ]
 
-AUDIT = [
+AUDIT_SCAN = [
     {"action":"read_claude_md"},
     {"action":"mcp","tool":"patterns_list"},
     {"action":"skill","skill":"ponytail-debt"},
@@ -258,7 +258,10 @@ AUDIT = [
     {"action":"read_reference","fallback":"skip"},
     {"action":"scan","parallel":["patterns","ponytail","checklist"]},
     {"action":"report"},
-    {"action":"STOP_AND_WAIT","rule":"SHOW report. ASK user which items to fix. DO NOT auto-fix. Only proceed after user approval."},
+]
+
+AUDIT_FIX = [
+    {"action":"user_approved_fix","rule":"Fix only items user approved. Same root cause -> one commit. Different -> Skill(fix) per item."},
 ]
 """Workflow orchestration engine v2.0 — single source of truth."""
 import os
@@ -432,7 +435,8 @@ PHASE_MAP = {
     ("wrap","init",None): WRAP_INIT,
     ("wrap","save",None): WRAP_SAVE,
     ("wrap","clean",None): WRAP_CLEAN,
-    ("code-audit","init",None): AUDIT,
+    ("code-audit","init",None): AUDIT_SCAN,
+    ("code-audit","fix",None): AUDIT_FIX,
 }
 
 HARD_RULES = {
