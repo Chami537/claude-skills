@@ -79,7 +79,7 @@ DEV_BUILD = [
 DEV_REVIEW = [
     {"action":"skill","skill":"simplify"},
     {"action":"skill","skill":"ponytail-review","reason":"diff over-engineering"},
-    {"action":"mcp","tool":"tokensave_impact"},
+    {"action":"mcp","tool":"tokensave_impact","server":"tokensave"},
     {"action":"skill","skill":"pensive:blast-radius"},
     {"action":"skill","skill":"code-audit","condition":"M/L scale"},
 ]
@@ -128,7 +128,7 @@ DEV_BUILD = [
 DEV_REVIEW = [
     {"action":"skill","skill":"simplify"},
     {"action":"skill","skill":"ponytail-review","reason":"diff over-engineering"},
-    {"action":"mcp","tool":"tokensave_impact"},
+    {"action":"mcp","tool":"tokensave_impact","server":"tokensave"},
     {"action":"skill","skill":"pensive:blast-radius"},
     {"action":"skill","skill":"code-audit","condition":"M/L scale"},
 ]
@@ -154,7 +154,7 @@ FIX_DIAGNOSE = [
 FIX_REVIEW = [
     {"action":"skill","skill":"simplify"},
     {"action":"skill","skill":"ponytail-review"},
-    {"action":"mcp","tool":"tokensave_impact"},
+    {"action":"mcp","tool":"tokensave_impact","server":"tokensave"},
     {"action":"skill","skill":"pensive:blast-radius","condition":"multi-file"},
     {"action":"skill","skill":"code-audit","reason":"similar issues"},
 ]
@@ -193,7 +193,7 @@ DEV_BUILD = [
 DEV_REVIEW = [
     {"action":"skill","skill":"simplify"},
     {"action":"skill","skill":"ponytail-review","reason":"diff over-engineering"},
-    {"action":"mcp","tool":"tokensave_impact"},
+    {"action":"mcp","tool":"tokensave_impact","server":"tokensave"},
     {"action":"skill","skill":"pensive:blast-radius"},
     {"action":"skill","skill":"code-audit","condition":"M/L scale"},
 ]
@@ -219,7 +219,7 @@ FIX_DIAGNOSE = [
 FIX_REVIEW = [
     {"action":"skill","skill":"simplify"},
     {"action":"skill","skill":"ponytail-review"},
-    {"action":"mcp","tool":"tokensave_impact"},
+    {"action":"mcp","tool":"tokensave_impact","server":"tokensave"},
     {"action":"skill","skill":"pensive:blast-radius","condition":"multi-file"},
     {"action":"skill","skill":"code-audit","reason":"similar issues"},
 ]
@@ -295,7 +295,7 @@ DEV_BUILD = [
 DEV_REVIEW = [
     {"action":"skill","skill":"simplify"},
     {"action":"skill","skill":"ponytail-review","reason":"diff over-engineering"},
-    {"action":"mcp","tool":"tokensave_impact"},
+    {"action":"mcp","tool":"tokensave_impact","server":"tokensave"},
     {"action":"skill","skill":"pensive:blast-radius"},
     {"action":"skill","skill":"code-audit","condition":"M/L scale"},
 ]
@@ -321,7 +321,7 @@ FIX_DIAGNOSE = [
 FIX_REVIEW = [
     {"action":"skill","skill":"simplify"},
     {"action":"skill","skill":"ponytail-review"},
-    {"action":"mcp","tool":"tokensave_impact"},
+    {"action":"mcp","tool":"tokensave_impact","server":"tokensave"},
     {"action":"skill","skill":"pensive:blast-radius","condition":"multi-file"},
     {"action":"skill","skill":"code-audit","reason":"similar issues"},
 ]
@@ -356,7 +356,7 @@ WRAP = [
     {"action":"git_summary"},
     {"action":"skill","skill":"ponytail-gain"},
     {"action":"mcp","tool":"workflow_health","reason":"check fallbacks and dep status"},
-    {"action":"mcp","tool":"headroom_compress"},
+    {"action":"mcp","tool":"headroom_compress","server":"headroom"},
     {"action":"mcp","tool":"claude_md_append","reason":"append commit summary to CLAUDE.md (MCP writes directly to disk)"},
     {"action":"mcp","tool":"memory_save","reason":"save project progress and lessons to memory (MCP writes directly to disk)"},
     {"action":"extract_lessons","skip_if":"trivial","auto_save":True},
