@@ -1,27 +1,12 @@
 ---
 name: dev
-description: New feature development. Plan -> Build -> Review -> Harden -> Ship.
+description: New feature development.
 alwaysApply: false
 trigger: dev, /dev, new feature, implement, 开发, 新功能, 加个, 做一个
 model_hint: opus
 ---
 
 ```python
-mcp__claude-mcp__workflow_step(
-    slug="<项目slug>",            # 必须叫 slug，不是 project/name/id
-    workflow="dev",
-    phase="<phase>",              # plan/build/verify/review/harden/ship
-    scale="S|M|L",                # S:单文件<50行, M:多文件, L:新模块
-    context={"task": "<功能描述>"}
-)
+mcp__claude-mcp__workflow_step(slug="<slug>", workflow="dev", phase="<phase>", scale="S|M|L", context={"task": "<desc>"})
 ```
-
-scale 取值: S(单文件<50行 跳过Ponytail) M(多文件) L(新模块/架构变更)。
-
-
-执行每个 step 后必须调 mark_step_done(slug, step_index)。全部做完才能 session_write 进下一个 phase。
-session_write 返回 GATE 错误 = 有步骤漏了，回去补完。
-
----
-
-# Dev: New Feature Workflow
+THIS IS THE ONLY INSTRUCTION. Execute returned steps in order. If MCP fails, tell user "MCP down".
