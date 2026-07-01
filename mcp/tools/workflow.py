@@ -456,6 +456,50 @@ def code_graph_resolve(slug, task, mode="explore"):
         {"p":6,"tool":"Agent","subagent_type":"Explore","reason":"last resort"},
     ],"rule":"Each level only on empty. NEVER fall back to Read+Grep."}
 
+
+
+# ── Step gating ──────────────────────────────────────────────
+
+_step_state = {}
+
+def mark_step_done(slug, step_index, result=None):
+    """Agent calls this after executing each step. MCP records progress."""
+    state = _step_state.setdefault(slug, {"steps_done": set(), "results": {}})
+    state["steps_done"].add(step_index)
+    if result:
+        state["results"][str(step_index)] = result
+    return {"ok": True, "steps_done": len(state["steps_done"])}
+
+def _count_required_steps(workflow, phase, scale):
+    """Count how many steps are required (no condition) for a phase."""
+    steps = PHASE_MAP.get((workflow, phase, scale), [])
+    if not steps and scale:
+        steps = PHASE_MAP.get((workflow, phase, None), [])
+    count = 0
+    for s in steps:
+        if isinstance(s, dict) and not s.get("condition"):
+            count += 1
+    return count
+
+def can_advance_phase(slug, workflow, current_phase, next_phase, checks, scale=None):
+    """Gatekeeper. Blocks phase transition until required steps are done."""
+    ok, err = validate_phase(workflow, current_phase, next_phase, checks)
+    if not ok:
+        return False, err
+    
+    required = _count_required_steps(workflow, current_phase, scale)
+    if required == 0:
+        return True, None  # No steps defined for this phase, allow
+    
+    state = _step_state.get(slug, {})
+    done = len(state.get("steps_done", set()))
+    
+    if done >= required:
+        _step_state[slug] = {"steps_done": set(), "results": {}}
+        return True, None
+    
+    return False, "Phase gate: %d/%d required steps completed. Cannot advance to %s." % (done, required, next_phase)
+
 def validate_phase(wf, current, next_p, checks):
     if next_p == "review" and not checks.get("build_passed"):
         return False, "HARD_RULE: build_passed required for review"

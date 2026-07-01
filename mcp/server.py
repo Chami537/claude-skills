@@ -175,3 +175,18 @@ def memory_save(slug: str, memory_type: str, name: str, content: str,
     """
     import tools.auto_save as au
     return au.memory_save(slug, memory_type, name, content, description=description)
+
+
+# ── Step gating ───────────────────────────────────────────────
+
+@mcp.tool()
+def mark_step_done(slug: str, step_index: int, result: dict | None = None) -> dict:
+    """Mark a workflow step as completed. Call this after executing each step from workflow_step().
+    
+    Args:
+        slug: project slug
+        step_index: 0-based index of the completed step
+        result: optional result data from the step
+    """
+    import tools.workflow as wf
+    return wf.mark_step_done(slug, step_index, result=result)

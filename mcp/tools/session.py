@@ -6,7 +6,7 @@ import re
 from datetime import datetime, timezone, timedelta
 
 try:
-    from tools.workflow import validate_phase
+    from tools.workflow import validate_phase, can_advance_phase
 except ImportError:
     validate_phase = None  # optional if workflow.py not present
 
@@ -145,6 +145,13 @@ def write(slug: str, workflow: str | None = None, phase: str | None = None,
         ok, err = validate_phase(wf, current.get("phase", ""), phase, merged_checks)
         if not ok:
             return {"error": err}
+
+    # Step gate: block phase advance if required steps not done
+    if can_advance_phase and phase and wf:
+        allowed, gate_err = can_advance_phase(slug, wf, current.get("phase", ""), phase,
+                                              merged_checks, scale=current.get("scale"))
+        if not allowed:
+            return {"error": "GATE: " + gate_err}
 
     # Merge
     current.update(kwargs)
